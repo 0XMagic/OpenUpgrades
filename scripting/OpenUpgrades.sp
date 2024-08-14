@@ -776,7 +776,7 @@ bool CanAccessUpgrade(int client, int upgrade) {
 		if(gUpgradeFilterWeaponMode[upgrade]) {
 			//blacklist mode
 			for(int i; i < wpn_count; i++) {
-				for(int j; j < 8; j++) {
+				for(int j; j < 3; j++) {
 					if(gClientWeapons[client][j] == gUpgradeFilterWeapons[upgrade][i])
 						return false;
 				}
@@ -785,7 +785,7 @@ bool CanAccessUpgrade(int client, int upgrade) {
 		} else {
 			//whitelist mode
 			for(int i; i < wpn_count; i++) {
-				for(int j; j < 8; j++) {
+				for(int j; j < 3; j++) {
 					if(gClientWeapons[client][j] == gUpgradeFilterWeapons[upgrade][i])
 						return true;
 				}
