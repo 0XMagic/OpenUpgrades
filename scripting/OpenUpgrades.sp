@@ -80,11 +80,12 @@ public void OnPluginStart() {
 	RegAdminCmd("sm_ou_load", Cmd_Load, ADMFLAG_ROOT, "[debug] force load mvm checkpoint");
 	RegAdminCmd("sm_ou_save", Cmd_Save, ADMFLAG_ROOT, "[debug] force save mvm checkpoint");
 	RegAdminCmd("sm_ou_reload", Cmd_ReloadConfig, ADMFLAG_ROOT, "Reload OU config and refund all upgrades");
+	RegAdminCmd("sm_addcurrency", Cmd_AddCurrency, ADMFLAG_ROOT, "Adds currency to global pool");
 	
 	RegConsoleCmd("sm_buy", Cmd_BuyMenu, "Open the upgrade shop");
 	RegConsoleCmd("sm_refund", Cmd_Refund, "Refund your upgrades");
 	RegConsoleCmd("sm_qbuy", Cmd_Qbuy, "Quick-Buy upgrades, use sm_qbuy for more info");
-	RegConsoleCmd("sm_addcurrency", Cmd_AddCurrency, "Adds currency to global pool");
+	
 	
 	HookEvent("mvm_pickup_currency", Event_OnCollectCurrency, EventHookMode_Pre);
 	HookEvent("post_inventory_application", Event_OnClientChanged);
