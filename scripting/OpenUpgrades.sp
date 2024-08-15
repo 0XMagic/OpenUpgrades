@@ -56,7 +56,8 @@ int gClientUpgradesCheckpoint[MAXPLAYERS + 1][U_COUNT];
 
 float gClientCustomAttributes[MAXPLAYERS + 1][C_COUNT];
 
-int gMoney = 0;
+int gMoney;
+bool gInitRound = true;
 int gMoneyCheckpoint;
 int gClientSpentMoney[MAXPLAYERS + 1];
 int gClientNode[MAXPLAYERS + 1];
@@ -108,6 +109,7 @@ public void OnPluginStart() {
 }
 
 public void OnMapStart() {
+	gInitRound = true;
 	RemoveAllUpgradeStations();
 	FindCurrencyOffset();
 }
@@ -388,7 +390,7 @@ public Action Event_OnClientChanged(Event e, const char[] name, bool dontBroadca
 	}
 	ClientChanged(client);
 	
-	if(!gMoney)
+	if(gInitRound)
 		ResetRound();
 	
 	return Plugin_Handled;
@@ -410,6 +412,7 @@ void ResetRound() {
 		if(gIsMvM && !cl_found && IsClientInGame(i) && TF2_GetClientTeam(i) == TFTeam_Red) {
 			cl_found = true;
 			CreateTimer(0.05, Timer_SetInitialCurrency, i);
+			gInitRound = false;
 		}
 	}
 	SaveCheckpoint();
