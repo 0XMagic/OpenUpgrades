@@ -411,6 +411,7 @@ void ResetRound() {
 		RefundAllUpgrades(i);
 		if(gIsMvM && !cl_found && IsClientInGame(i) && TF2_GetClientTeam(i) == TFTeam_Red) {
 			cl_found = true;
+			i = GetClientUserId(i);
 			CreateTimer(0.05, Timer_SetInitialCurrency, i);
 			gInitRound = false;
 		}
@@ -419,7 +420,10 @@ void ResetRound() {
 }
 
 
-public Action Timer_SetInitialCurrency(Handle timer, int client) {
+public Action Timer_SetInitialCurrency(Handle timer, int userid) {
+	int client = GetClientOfUserId(userid);
+	if(!client)
+		return Plugin_Handled;
 	gMoney = GetEntProp(client, Prop_Send, "m_nCurrency");
 	gMoneyCheckpoint = gMoney;
 	return Plugin_Handled;
