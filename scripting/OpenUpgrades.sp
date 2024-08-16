@@ -427,6 +427,9 @@ public Action Timer_SetInitialCurrency(Handle timer, int client) {
 
 
 void ClientChanged(int client) {
+	if(gIsMvM && IsFakeClient(client))
+		return;
+	
 	bool force_reopen = false;
 	if(UpdateClientEquipment(client)) {
 		RefundAllUpgrades(client);
