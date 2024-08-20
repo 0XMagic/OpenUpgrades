@@ -562,6 +562,9 @@ void LoadConfigFromFile() {
 
 
 bool CanBuyUpgrades(int client) {
+	if(!IsClientInGame(client))
+		return false;
+	
 	TFTeam team = TF2_GetClientTeam(client);
 	return team == TFTeam_Red || team == TFTeam_Blue;
 }
