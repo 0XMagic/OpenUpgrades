@@ -3,6 +3,7 @@
 
 #include <OpenUpgrades>
 #include <sdkhooks>
+#include <tf2_stocks>
 #include <TF2Attributes>
 
 #define PLUGIN_VERSION "1.0"
@@ -259,9 +260,17 @@ float GetResistanceMultiplier(int client, int damagetype) {
 
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom) {
-	//if (victim == attacker || victim == inflictor) { return Plugin_Continue;}
-	float power = OU_GetCustomAttribute(victim, C_CURRENT_POWER);
+	if (victim == attacker) {return Plugin_Continue;}
 	
+	if(!victim || !attacker || victim > MaxClients || attacker > MaxClients){
+		return Plugin_Continue;
+	}
+	
+	if(TF2_GetClientTeam(victim) == TF2_GetClientTeam(attacker)){
+		return Plugin_Continue;
+	}
+	
+	float power = OU_GetCustomAttribute(victim, C_CURRENT_POWER);	
 	if(power <= 0.0) {
 		return Plugin_Continue;
 	}
