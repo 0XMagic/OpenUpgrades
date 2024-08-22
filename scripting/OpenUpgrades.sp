@@ -857,6 +857,10 @@ void GetUpgradeString(int client, int upgrade, char[] string, int maxlen, int co
 		Format(str, sizeof(str), " %i / %i", gClientUpgrades[client][upgrade], gUpgradeMax[upgrade]);
 		StrCat(string, maxlen, str);
 	}
+	
+	if(strlen(gUpgradeDesc[upgrade])) {
+		Format(string, maxlen, "%s\n%s", string, gUpgradeDesc[upgrade]);
+	}
 }
 
 void ShowUpgradeMenu(int client, int node, int bcount = -1) {
@@ -866,7 +870,12 @@ void ShowUpgradeMenu(int client, int node, int bcount = -1) {
 	gActiveMenu[client] = menu;
 	char title[1024];
 	char str[8];
-	menu.SetTitle("$%i - %s", gMoney - gClientSpentMoney[client], gUpgradeName[node]);
+	if(strlen(gUpgradeDesc[node])) {
+		menu.SetTitle("$%i - %s\n%s", gMoney - gClientSpentMoney[client], gUpgradeName[node], gUpgradeDesc[node]);
+	} else {
+		menu.SetTitle("$%i - %s", gMoney - gClientSpentMoney[client], gUpgradeName[node]);
+	}
+	
 	int count = gUpgradeCount[node];
 	int item;
 	
