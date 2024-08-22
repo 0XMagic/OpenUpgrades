@@ -72,11 +72,14 @@ Menu gActiveMenu[MAXPLAYERS + 1];
 bool gIsMvM = true;
 bool gBlueWins;
 
+ConVar cCashMultiplier;
 
 public void OnPluginStart() {
 	LoadConfigFromFile();
 	
 	CreateConVar("OpenUpgrades_version", PLUGIN_VERSION, "OpenUpgrades version number (no touchy)", FCVAR_NOTIFY);
+	cCashMultiplier = CreateConVar("ou_cash_multiplier", "1.0", "Cash multiplier for OpenUpgrades", FCVAR_NOTIFY, true, 0.0);
+	
 	
 	RegAdminCmd("sm_ou_load", Cmd_Load, ADMFLAG_ROOT, "[debug] force load mvm checkpoint");
 	RegAdminCmd("sm_ou_save", Cmd_Save, ADMFLAG_ROOT, "[debug] force save mvm checkpoint");
@@ -189,7 +192,7 @@ public void CurrencyPackSpawned(int entity) {
 	if(GetEntProp(entity, Prop_Send, "m_bDistributed") && gCurrencyOffset) {
 		int money = GetEntData(entity, gCurrencyOffset);
 		SetEntData(entity, gCurrencyOffset, -money);
-		gMoney += money;
+		gMoney += GetIncome(money);
 	}
 }
 
@@ -198,7 +201,7 @@ public Action Event_OnCollectCurrency(Handle event, const char[] name, bool dont
 	int cash = GetEventInt(event, "currency");
 	if (cash > 0) {
 		//cash is green, run code like normal
-		gMoney += cash;
+		gMoney += GetIncome(cash);
 	} else {
 		SetEventInt(event, "currency", cash * -1);
 		return Plugin_Changed;
@@ -352,6 +355,10 @@ public Action Cmd_Refund(int client, int args) {
 	return Plugin_Handled;
 }
 
+int GetIncome(int value) {
+	return RoundFloat(float(value) * cCashMultiplier.FloatValue);
+}
+
 
 public Action Event_MissionEnd(Handle event, const char[] name, bool dontBroadcast) {
 	gBlueWins = GetEventInt(event, "team") == 3;
@@ -424,7 +431,7 @@ public Action Timer_SetInitialCurrency(Handle timer, int userid) {
 	int client = GetClientOfUserId(userid);
 	if(!client)
 		return Plugin_Handled;
-	gMoney = GetEntProp(client, Prop_Send, "m_nCurrency");
+	gMoney = GetIncome(GetEntProp(client, Prop_Send, "m_nCurrency"));
 	gMoneyCheckpoint = gMoney;
 	return Plugin_Handled;
 }
